@@ -9,6 +9,7 @@ import px2dp from '../../utils/px2dp';
 import NavigatorBar from '../../component/NavigationBar';
 import Avatar from '../../component/Avatar';
 import theme from '../../constants/theme';
+
 export default class DiscoveryFragment extends Component {
     constructor(props) {
         super(props);
@@ -76,7 +77,7 @@ export default class DiscoveryFragment extends Component {
 
     __renderBtnContent(i, index) {
         return (
-            <View style={{width: 100, height: 100, borderRadius: 50, alignItems: 'center', justifyContent: 'center'}}>
+            <View style={{width: 100, height: 100, alignItems: 'center', justifyContent: 'center'}}>
                 <Avatar icon={this.tabIcon[i][index]} width={70} backgroundColor={this.tabColor[i][index]}/>
             </View>
         );
@@ -91,14 +92,15 @@ const styles = StyleSheet.create({
     },
     btnPanel: {
         backgroundColor: '#fff',
-        height: px2dp(250),
+        height: px2dp(260),
         width: theme.screenWidth,
         marginTop: px2dp(12),
         borderBottomColor: theme.segment.color,
         borderBottomWidth: theme.segment.width,
         borderTopColor: theme.segment.color,
         borderTopWidth: theme.segment.width,
-        padding: px2dp(10)
+        padding: px2dp(10),
+        paddingTop: px2dp(20)
     },
     btnCell: {
         flex: 1,
@@ -109,6 +111,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         paddingLeft: 10,
         paddingRight: 10,
     },

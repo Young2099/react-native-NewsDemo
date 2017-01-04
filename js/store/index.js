@@ -5,7 +5,7 @@
 
 import {createStore,applyMiddleware} from 'redux';
 import reduces from '../reducers/index';
-import thunk from 'redux-thunk';
+import thunkMiddleware from 'redux-thunk';
 
-const  applyStroreMiddleware = applyMiddleware(thunk)(createStore);
+const  applyStroreMiddleware = applyMiddleware(thunkMiddleware)(createStore);
 export const store = applyStroreMiddleware(reduces);
