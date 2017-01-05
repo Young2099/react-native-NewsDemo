@@ -6,12 +6,16 @@
 import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 import theme from '../../../constants/theme';
-
+import NavigationBar from '../../../component/NavigationBar';
 export default class TextTabPage extends Component {
     render() {
         return (
             <View style={{flex: 1, backgroundColor: theme.pageBackgroundColor}}>
-                <Text>文本</Text>
+                <NavigationBar title={this.props.title} isBackBtnOnLeft={true}
+                               leftBtnIcon="arrow-back" leftBtnPress={this._handleBack.bind(this)}
+                />
+
+
             </View>
         );
     }

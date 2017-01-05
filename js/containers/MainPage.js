@@ -40,7 +40,7 @@ class BottomTabBar extends Component {
                     renderIncon={() => <Image style={styles.tabBarItemIcon} source={this.state.homeNormal}/>}
                     renderSelectedIcon={() => <Image style={styles.tabBarItemIcon} source={this.state.homeSelected}/>}
                     onPress={() => this.setState({selectedTab: 'home'})}>
-                    {<HomeFragment/>}
+                    {<HomeFragment navigator={navigator}/>}
                 </TabNavigator.Item>
                 <TabNavigator.Item
                     selected={this.state.selectedTab === 'discovery'}
@@ -50,7 +50,7 @@ class BottomTabBar extends Component {
                     renderSelectedIcon={() => <Image style={styles.tabBarItemIcon}
                                                      source={this.state.compassSelected}/>}
                     onPress={() => this.setState({selectedTab: 'discovery'})}>
-                    {<DiscoveryFragment/>}
+                    {<DiscoveryFragment navigator={navigator}/>}
                 </TabNavigator.Item>
                 <TabNavigator.Item
                     selected={this.state.selectedTab === 'me'}

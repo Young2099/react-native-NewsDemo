@@ -5,7 +5,9 @@
 
 import React, {Component, PropTypes} from 'react';
 import {StyleSheet, View, Text, ListView} from 'react-native';
-
+import px2dp from '../utils/px2dp';
+import theme from '../constants/theme';
+import Avatar from './Avatar';
 export default class SimpleListView extends Component {
     static propTypes = {
         dataSource: PropTypes.array,
@@ -16,16 +18,19 @@ export default class SimpleListView extends Component {
         super(props);
         //判断ListView的数据是否==
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 != r2});
+        this.tabIcon = ['logo-android', 'logo-apple', 'logo-chrome', 'ios-film', 'ios-book'];
+        this.tabColor = ['rgb(141,192,89)', '#000', 'rgb(51,154,237)', 'rgb(154,53,172)', 'rgb(65,87,175)'];
     }
 
     render() {
         return (
-            <ListView
-                dataSource={this.ds.cloneWithRows(this.props.dataSource)}
-                renderRow={this._renderRow.bind(this)}
-                renderHeader={this._renderHeader.bind(this)}
-                renderSeparator={this._renderSeparator.bind(this)}/>
-
+            <View style={styles.container}>
+                <ListView
+                    dataSource={this.ds.cloneWithRows(this.props.dataSource)}
+                    renderRow={this._renderRow.bind(this)}
+                    renderHeader={this._renderHeader.bind(this)}
+                    renderSeparator={this._renderSeparator.bind(this)}/>
+            </View>
         );
 
     }
@@ -41,27 +46,53 @@ export default class SimpleListView extends Component {
     _renderHeader() {
         return (
             <View>
+                <Avatar icon={this.tabIcon[this._judgeIconAttribute(headerTitle)]} width={px2dp(22)}
+                        backgroundColor={this.tabColor[this._judgeIconAttribute(headerTitle)]}/>
                 <Text style={styles.header}>{this.props.headerTitle}</Text>
             </View>
         );
     }
 
     _renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
-        return ( <View key={rowID} style={{backgroundColor: '#000', height: 1}}/>);
+        return ( <View key={rowID} style={{backgroundColor: theme.segment.color, height: theme.segment.width}}/>);
+    }
+
+    _judgeIconAttribute(hearderLabel) {
+        switch (hearderLabel) {
+            case 'Android':
+                return 0;
+            case 'iOS':
+                return 1;
+            case '前端':
+                return 2;
+            case '休息视频':
+                return 3;
+            case '扩展阅读':
+                return 4;
+
+        }
     }
 }
 
 const styles = StyleSheet.create({
-    header: {
-        color: '#000',
-        fontSize: 20,
-        padding: 10
-    },
-    rowItem: {
-        backgroundColor: '#fff',
-        padding: 10
-    },
-    rowContent: {
-        fontSize: 15
-    }
-});
+        container: {
+            marginBottom: 10,
+        },
+        header: {
+            flexDirection: 'row',
+            padding: px2dp(12),
+            paddingLeft: px2dp(15),
+            alignItems: 'center', backgroundColor: '#fff',
+            borderBottomColor: theme.segment.color,
+            borderBottomWidth: theme.segment.width
+        },
+        headerLabel: {
+            color: '#000',
+            fontSize: px2dp(20),
+            padding: px2dp(10),
+            textShadowColor: 'rgba(0,0,0,.4)',
+            textShadowOffset: {height: 6, width: 2},
+            textShadowRadius: 17
+        },
+        rowItem: {backgroundColor: '#fff'}
+    });

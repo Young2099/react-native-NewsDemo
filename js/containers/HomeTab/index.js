@@ -6,12 +6,20 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as Actions from '../../actions/RequestDatas'
-import {View, StyleSheet, ScrollView, Image, Text, TouchableNativeFeedback, TouchableHighlight} from 'react-native';
+import {
+    View,
+    StyleSheet,
+    ScrollView,
+    Image,
+    Text,
+    TouchableHighlight,
+    RefreshControl
+} from 'react-native';
 import NavigationBar from '../../component/NavigationBar';
 import theme from '../../constants/theme';
 import getDate from '../../utils/getCurrentDate';
 import  * as Info from '../../utils/handleDataSource';
-import SimpelList from '../../component/SimpleListView';
+import SimpleList from '../../component/SimpleListView';
 import px2dp from '../../utils/px2dp';
 class HomeFragment extends Component {
     constructor(props) {
@@ -27,46 +35,53 @@ class HomeFragment extends Component {
                 <View style={[styles.toolbar, {opacity: this.state.opacity}]}>
                     <NavigationBar title="今日Gank" rightBtnIcon='calendar'
                                    rightBtnPress={this._onPress.bind(this, 0)}/></View>
-                <ScrollView scrollEnabled={this.state.scrollEnabled} onScroll={this._onScroll.bind(this)}>
-
-                    <View style={{height: this.imageHeight, width: theme.screenWidth}}>
-                        {this.props.loading ? <Text>loading</Text> :
-                            <View>
-                                <View style={{height: this.imageHeight, width: theme.screenWidth}}>
-                                    <ImageView
-                                        imgUrl={Info.getFuLiUrl(dataSource)}
-                                        labelTime={getDate()}
-                                    />
+                <ScrollView scrollEnabled={this.state.scrollEnabled} onScroll={this._onScroll.bind(this)}
+                            refreshControl={
+                                <RefreshControl refreshing={this.props.loading}
+                                                onRefresh={this._onPress.bind(this, 0)}/>}>
+                    {this.props.hasData ?
+                        <View style={{height: this.imageHeight, width: theme.screenWidth}}>
+                            {this.props.loading ? <Text>loading</Text> :
+                                <View>
+                                    <View style={{height: this.imageHeight, width: theme.screenWidth}}>
+                                        <ImageView
+                                            imgUrl={Info.getFuLiUrl(dataSource)}
+                                            labelTime={getDate()}
+                                        />
+                                    </View>
+                                    <View style={styles.scrollContents}>
+                                        {Info.getCategoryList(dataSource).map((item, i) => {
+                                            if (item !== '福利')
+                                                return <SimpleList key={i}
+                                                                   dataSource={Info.getTargetList(dataSource, item)}
+                                                                   headerTitle={item}/>
+                                        })}
+                                    </View>
+                                    <View style={styles.footer}>
+                                        <TouchableOpacity
+                                            onPress={this._onPress.bind(this, 1)}
+                                            activeOpacity={theme.touchableOpacityActiveOpacity}
+                                        >
+                                            <View style={styles.bottomBtn}>
+                                                <Text style={styles.btnLabel}>没看够？试试往期干货吧</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
-                                <View style={styles.scrollContents}>
-                                    {Info.getCategoryList(dataSource).map((item, i) => {
-                                        if (item !== '福利')
-                                            return <SimpelList key={i} dataSource={Info.getTargetList(dataSource, item)}
-                                                               headerTitle={item}/>
-                                    })}
-                                </View>
-                                <View style={{width: theme.screenWidth, alignItems: 'center'}}>
-                                    <TouchableHighlight
-                                        onPress={this._onPress().bind(this, 1)}
-                                        underlayColor={theme.touchableHighlightUnderlayColor}
-                                    >
-                                        <View style={styles.bottomBtn}>
-                                            <Text style={styles.btnLabel}>没看够？试试往期干货吧</Text>
-                                        </View>
-                                    </TouchableHighlight>
-                                </View>
-                            </View>
-                        }</View>
-                    <View style={styles.scrollContents}>
-
-                    </View>
-                    <Text>dsds</Text>
+                            }</View>
+                        :
+                        null
+                    }
                 </ScrollView>
             </View>
         );
     }
 
-    _onPress() {
+    componentDidMount() {
+        this.props.actions.fetchData(getDate());
+    }
+
+    _onPress(id) {
         if (id === 0)
             this.props.actions.fetchData(getDate());
         else if (id === 1);
@@ -129,7 +144,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
 
-
+    footer: {
+        width: theme.screenWidth,
+        height: px2dp(70),
+        alignItems: 'center',
+        backgroundColor: '#fff',
+    },
     scrollContents: {
         height: theme.screenHeight,
     },
@@ -140,8 +160,7 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 3,
-        margin: 15
+        borderRadius: 30,
     },
     btnLabel: {
         color: '#fff',
@@ -151,7 +170,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
     return {
         dataSource: state.data.dataSource,
-        loading: state.data.loading
+        loading: state.data.loading,
+        hasData: state.data.hasData
     };
 };
 

@@ -4,6 +4,7 @@ import * as types from '../actions/ActionTypes';
 const initialState = {
     loading: true,
     error: false,
+    hasData: false,
     dataSource: {},
 };
 
@@ -14,8 +15,10 @@ export default function data(state = initialState, action) {
 
         case types.RECEIVE_DATA:
             return Object.assign({}, state, {
-                ...state, loading: false,
+                ...state,
+                loading: false,
                 dataSource: action.dataSource,
+                hasData: true
             });
 
         case types.FETCH_FAILURE:

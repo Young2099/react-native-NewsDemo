@@ -79,7 +79,7 @@ class IconButton extends Component {
 const styles = StyleSheet.create({
     container: {
         height: theme.toolbar.height + px2dp(4),
-        width: theme.screenHeight
+        width: theme.screenWidth
     },
     backBtn: {
         justifyContent: 'center',
@@ -96,10 +96,10 @@ const styles = StyleSheet.create({
         paddingTop: Platform.OS === 'android' ? 0 : px2dp(6),
         elevation: 3,
         shadowColor: 'rgb(0,0,0)',
-        shadowOffset: {height: 3, width: 1},
+        shadowOffset: {height: 2, width: 1},
         shadowOpacity: 0.25,
         shadowRadius: 3,
-        justifyContent:'center'
+
     },
     fixedCell: {
         width: theme.toolbar.height,

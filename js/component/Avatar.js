@@ -58,6 +58,14 @@ export default class Avatar extends Component {
 }
 
 const styles = StyleSheet.create({
-    cell: {}
+    cell: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 10,
+        shadowColor: 'rgb(0,0,0)',
+        shadowOffset: {height: 5, width: 1},
+        shadowOpacity: 0.25,
+        shadowRadius: 3
+    }
 
 });

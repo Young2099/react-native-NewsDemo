@@ -9,7 +9,9 @@ import px2dp from '../../utils/px2dp';
 import NavigatorBar from '../../component/NavigationBar';
 import Avatar from '../../component/Avatar';
 import theme from '../../constants/theme';
-
+import ImageTabPage from './TabPages/ImageTabPage';
+import TextTabPage from './TabPages/TextTabPage';
+import VideoTabPage from './TabPages/VideoTabPage';
 export default class DiscoveryFragment extends Component {
     constructor(props) {
         super(props);
@@ -47,12 +49,12 @@ export default class DiscoveryFragment extends Component {
                                             <View style={styles.btnCell} key={i + index}>
                                                 {Platform.OS === 'android' ?
                                                     <TouchableNativeFeedback
-                                                        onPress={this._itemPressCallBack.bind(this, i + index)}
+                                                        onPress={this._itemPressCallBack.bind(this, i + index, subItem)}
                                                         background={TouchableNativeFeedback.Ripple('rgba(0,0,0,.2)', true)}>
                                                         {this.__renderBtnContent(i, index)}
                                                     </TouchableNativeFeedback> :
                                                     <TouchableHighlight
-                                                        onPress={this._itemPressCallBack.bind(this, i + index)}
+                                                        onPress={this._itemPressCallBack.bind(this, i + index, subItem)}
                                                         underlayColor={theme.touchableHighlightUnderlayColor}>
                                                         {this.__renderBtnContent(i, index)}
                                                     </TouchableHighlight>}
@@ -72,7 +74,24 @@ export default class DiscoveryFragment extends Component {
 
     //跳转对应的Fragment的函数
     _itemPressCallBack() {
-        // this.props.navigator.push({component: });
+        switch (id) {
+            case 3:  //福利Page
+                this._pushScene(ImageTabPage, title);
+                break;
+            case 4: //视频Page
+                this._pushScene(VideoTabPage, title);
+                break;
+            default:
+                this._pushScene(TextTabPage, title);
+                break;
+        }
+    }
+
+    _pushScene(component, title) {
+        this.props.navigator.push({
+            component: component,
+            args: {title: title}
+        })
     }
 
     __renderBtnContent(i, index) {
@@ -111,9 +130,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingLeft: 10,
-        paddingRight: 10,
+
     },
     label: {
         marginTop: px2dp(-5),
